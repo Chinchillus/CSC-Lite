@@ -2,7 +2,8 @@
 Ultra simple system cleaner written in batch\
 It has a confirmation (Y/N) if you want to clean\
 \
-I am open to suggestions what directories to add
+I am open to suggestions what directories to add\
+It has an installer and updater [CSC Installer](https://github.com/Chinchillus/CSC-Installer)
 
 # Things that it cleans
 - Prefetch
