@@ -25,7 +25,7 @@ cls
 color c
 set "params=%*"
 cd /d "%~dp0" && ( if exist "%Temp%\getadmin.vbs" del "%Temp%\getadmin.vbs" ) && fsutil dirty query %systemdrive% 1>nul  || (  echo Set UAC = CreateObject^("Shell.Application"^) : UAC.ShellExecute "cmd.exe", "/k cd ""%~sdp0"" && %~s0 %params%", "", "runas", 1 >> "%Temp%\getadmin.vbs" && "%Temp%\getadmin.vbs" && exit /B )
-title CSC Lite (v1.2 "purge")
+title CSC Lite (v1.3 "timeout")
 cd /
 :start
 echo.
@@ -50,12 +50,13 @@ echo Welcome, %USERNAME%!
 echo.
 timeout /t 1 /nobreak >nul
 goto confirm_clean
+
 :confirm_clean
 echo Are you sure you want to perform a system cleanup? This will delete various temporary files.
 echo Type Y to proceed, or N to cancel.
 set /p choice=Your choice [Y/N]: 
 if /I "%choice%"=="Y" (
-    goto csc
+    goto clean_trash
 ) else if /I "%choice%"=="N" (
     echo Cleanup canceled. Exiting...
     timeout /t 2 >nul
@@ -65,6 +66,25 @@ if /I "%choice%"=="Y" (
     timeout /t 2 >nul
     goto confirm_clean
 )
+
+:clean_trash
+echo Do you want to clean the recycling bin?
+echo Type Y to proceed, or N to cancel.
+set /p choice=Your choice [Y/N]: 
+if /I "%choice%"=="Y" (
+	echo Cleaning the bin...
+    rd /s /q %systemdrive%\$Recycle.bin
+	goto csc
+) else if /I "%choice%"=="N" (
+    echo Recycle bin won't be cleaned!
+    timeout /t 1 >nul
+    goto csc
+) else (
+    echo Invalid choice. Please select Y or N.
+    timeout /t 2 >nul
+    goto confirm_clean
+)
+
 :csc
 cls
 cd C:
